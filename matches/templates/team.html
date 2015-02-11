@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if matches.count > 0 %}
+    <h2>Все матчи команды: {{team}}</h2>
+	<table>
+
+	{% for match in matches %}
+	<tr>
+		<td><a href="/tourn/{{match.tournament}}/">{{match.tournament}}</a></td>
+		<td>{% if match.doubtdate %}
+		    {{match.doubtdate}}
+		    {% else %}
+		    {{match.match_date}}
+		    {% endif %}</td>
+		<td>
+			<a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> -
+			{% if match.home_score = 1%}
+			    в : п
+			{% elif match.away_score = 1%}
+			    п : в
+			{% else %}
+			    {{match.home_score}}:{{match.away_score}}
+			{% endif %}</td>
+			<td>
+		{% if match.home_scorers or match.away_scorers or match.ref or match.stadium %}
+		    <a class="open" href="#openpop{{forloop.counter}}">Очки, судья, стадион</a>
+			<div id="openpop{{forloop.counter}}" class="pop">
+			    <div class="dialog">
+			        <a href="#close" title="Закрыть" class="close">X</a>
+			        {{match.home_scorers}} // {{match.away_scorers}}
+			    </div>
+			    {% if match.ref or match.stadium %}
+			    <div class="dialog">
+			    {% if match.ref %}Судья - {{match.ref}}.{% endif %}
+			    {% if match.stadium %}Стадион {{match.stadium}}{% endif %}
+			    {% if match.comment %}<br>{{match.comment|safe}}{% endif %}
+			    </div>
+		        {% endif %}
+		    </div>
+		{% endif %}</td>
+	</tr>
+	{% endfor %}
+	</table>
+
+{% else %}
+
+<p>Что-то мне подсказывает, что нет такой команды в моей базе данных</p>
+{% endif %}
+
+{% endblock %}
+
+{% block footer %}
+	    Если у вас есть добавления и исправления к данной базе,
+	    не сочтите за труд написать об этом -> <a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">обратная связь</a>
+			<br><br>
+			ps: спасибо вам за добавления, все комменты вносятся "внутрь" базы в секретные поля,
+			когда допишу функционал, всё будет выводиться как положено. а пока, для добавления матчей в базу
+			вы можете пользоваться <a href="https://docs.google.com/forms/d/1dX9HXAXPu9qItXluQUGQPkA-zbNxtjRgCh327gSIqiI/viewform">вот этой удобной формой</a>!
+{% endblock %}

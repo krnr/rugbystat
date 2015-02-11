@@ -1,0 +1,129 @@
+	#page {
+		width: 960px;
+		text-align: left;
+		margin: 10px auto 20px auto;
+	}
+	#sidebar {
+		float: left;
+		width: 200px;
+		padding: 8px;
+	}
+	#content {
+		float: left;
+		width: 720px;
+		padding: 10px;
+		border: 1px dotted;
+	}
+
+	#content > table {
+	    border-spacing: 5px;
+	}
+
+	#content > table > tbody > tr > td:nth-child(1) {
+	    font-size: 0.8em;
+	}
+	#content > table > tbody > tr > td:nth-child(2) {
+	    font-size: 0.8em;
+	}
+	.hidden {
+	    display:none;
+	}
+
+/* ===== Popup window ==== */
+
+	.pop {
+	    position: fixed;
+	    top: 0;
+	    right: 0;
+	    bottom: 0;
+	    left: 0;
+	    background: rgba(0, 0, 0, 0);
+	    visibility: hidden;
+	    z-index: 9999;
+	    -moz-transition: all 2s ease-out;
+	    -webkit-transition: all 2s ease-out;
+	    -o-transition: all 2s ease-out;
+	    transition: all 2s ease-out;
+	    -webkit-transition-delay: 0.2s;
+	    -moz-transition-delay: 0.2s;
+	    -o-transition-delay: 0.2s;
+	    -transition-delay: 0.2s;
+	    opacity: 0;
+	    pointer-events: none;
+	}
+	.dialog {
+	    max-width: 400px;
+	    font-family: Arial, Helvetica, sans-serif;
+	    position: relative;
+	    top: -1000px;
+	    margin: 10% auto;
+	    padding: 5px 20px 13px 20px;
+	    -moz-border-radius: 10px;
+	    -webkit-border-radius: 10px;
+	    border-radius: 10px;
+	    background: #fefefe;
+	    box-shadow: 0 0 10px #000000;
+	    -moz-box-shadow: 0 0 10px #000000;
+	    -webkit-box-shadow: 0 0 10px #000000;
+	    z-index: 10000;
+	}
+	.pop:target {
+	    opacity: 1;
+	    visibility: visible;
+	    pointer-events: auto;
+	    background: rgba(4, 10, 30, 0.8);
+	    -moz-transition: all 0.5s ease-out;
+	    -webkit-transition: all 0.5s ease-out;
+	    -o-transition: all 0.5s ease-out;
+	    transition: all 0.5s ease-out;
+	}
+	.pop:target .dialog {
+	    top: 50px;
+	    -moz-transition: all 0.8s ease-out;
+	    -webkit-transition: all 0.8s ease-out;
+	    -o-transition: all 0.8s ease-out;
+	    transition: all 0.8s ease-out;
+	    -webkit-transition-delay: 0.4s;
+	    -moz-transition-delay: 0.4s;
+	    -o-transition-delay: 0.4s;
+	    -transition-delay: 0.4s;
+	}
+	.close {
+	    background-color: rgba(61, 61, 61, 0.8);
+	    border: 2px solid #ccc;
+	    color: #FFFFFF;
+	    line-height: 20px;
+	    position: absolute;
+	    right: -12px;
+	    text-align: center;
+	    top: -10px;
+	    width: 20px;
+	    text-decoration: none;
+	    font-size: 12px;
+	    font-weight: bold;
+	    -webkit-border-radius: 15px;
+	    -moz-border-radius: 15px;
+	    border-radius: 15px;
+	    box-shadow: 0 0 10px #000000;
+	    -moz-box-shadow: 0 0 10px #000000;
+	    -webkit-box-shadow: 0 0 10px #000000;
+	    -moz-transition: all 0.5s ease-out;
+	    -webkit-transition: all 0.5s ease-out;
+	    -o-transition: all 0.5s ease-out;
+	    transition: all 0.5s ease-out;
+	    -webkit-transition-delay: 0.2s;
+	    -moz-transition-delay: 0.2s;
+	    -o-transition-delay: 0.2s;
+	    -transition-delay: 0.2s;
+	}
+	.close:hover {
+	    background-color: rgba(252, 20, 0, 0.8);
+	    -moz-transition: all 0.5s ease-out;
+	    -webkit-transition: all 0.5s ease-out;
+	    -o-transition: all 0.5s ease-out;
+	    transition: all 0.5s ease-out;
+	}
+	.dialog p a {
+	    color: green;
+	    text-decoration: none;
+	}

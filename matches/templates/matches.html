@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Language is {{ language }}</h2>
+<h2>Session language is {{ session_language }}</h2>
+{% if matches.count > 0 %}
+	{% for match in matches %}
+		<div id='date'>
+			{{match.match_date}} / {{match.tournament}} </div>
+		<div id='match'>
+			<a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}
+		{% if match.home_scorers %}
+			{{match.home_scorers}} /
+		{% endif %}
+		{% if match.away_scorers %}
+			/ {{match.away_scorers}}
+		{% endif %}</div>
+		<div id='stat'>
+		{% if match.ref %}
+			Судья - {{match.ref}}.
+		{% endif %}
+		{% if match.stadium %}
+			Стадион {{match.stadium}}
+		{% endif %}</div>
+	{% endfor %}
+{% else %}
+
+<p>None to show!</p>
+{% endif %}
+
+{% endblock %}

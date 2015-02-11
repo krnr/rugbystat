@@ -1,0 +1,38 @@
+{% load static %}
+<html>
+	<head>
+	    <title>Собираем все матчи по регби любительских команд</title>
+	<link rel="stylesheet" type="text/css" href="{% static "assets/default.css" %}">
+	</head>
+	<body>
+	<div id="page">
+		<div id="sidebar">
+			{% block sidebar %}
+{% if teams %}
+	<ul>
+
+	{% for team in teams %}
+	<li><a href="/teams/{{team}}/">{{team}}</a></li>
+	{% endfor %}
+	</ul>
+{% else %}
+
+<p>None to show! in base tpl</p>
+{% endif %}
+			{% endblock%}
+		</div>
+		<div id="content">
+			{% block content %}
+			This is content
+			{% endblock%}
+		</div>
+		<div id="footer">
+			{% block footer %}
+			This is footer
+			{% endblock%}
+		</div>
+
+	</div>
+
+	</body>
+</html>
