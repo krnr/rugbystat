@@ -122,11 +122,20 @@ class DjangoSite(models.Model):
     class Meta:
         db_table = 'django_site'
 
+class Team(models.Model):
+    _id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=30)
+    city = models.CharField(max_length=30)
+    foundation = models.IntegerField(blank=True, null=True)
+    logo = models.CharField(max_length=50)
+    story = models.TextField()
 
 class Matches(models.Model):
     match_id = models.AutoField(primary_key=True)
     home = models.CharField(max_length=30)
+    home_id = models.ManyToManyField(Team, related_name='home_id')
     away = models.CharField(max_length=30)
+    away_id = models.ManyToManyField(Team, related_name='away_id')
     home_score = models.IntegerField(blank=True, null=True)
     away_score = models.IntegerField(blank=True, null=True)
     home_rating_before = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -143,7 +152,9 @@ class Matches(models.Model):
     doubtdate = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta:
+        managed = False
         db_table = 'matches'
+        verbose_name_plural = 'Matches'
 
     def __unicode__(self):
 		return "(" + str(self.match_date) + ") " + self.home + " - " + self.away + " - " + str(self.home_score) + ":" + str(self.away_score)
