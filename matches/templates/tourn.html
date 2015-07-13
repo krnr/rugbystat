@@ -15,7 +15,7 @@
 		    ???
 		    {% endif %}</td>
 		<td>
-			<a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> -
+			<a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a> - <a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a> -
 			{% if match.home_score = 1%}
 			    в : п
 			{% elif match.away_score = 1%}

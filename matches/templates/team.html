@@ -3,9 +3,18 @@
 {% block content %}
 
 {% if matches.count > 0 %}
-    <h2>Все матчи команды: {{team}}</h2>
-	<table>
-
+    <h2>Все матчи команды: {{team.name}}</h2>
+    {% if team.link %}
+    <div class="url">
+    <a href="{{team.link}}">{{team.link}}</a>
+    </div>
+    {% endif %}
+    {% if team.logo %}
+    <div class="logo">
+    <img src="{{team.logo}}" width="200"/>
+    {% endif %}
+    </div>
+		<table>
 	{% for match in matches %}
 	<tr>
 		<td><a href="/tourn/{{match.tournament}}/">{{match.tournament}}</a></td>
@@ -15,7 +24,18 @@
 		    {{match.match_date}}
 		    {% endif %}</td>
 		<td>
-			<a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> -
+			{% if match.home_link.in_menu %}
+			    <a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a>
+			{% else %}
+			    {{match.home}}
+			{% endif %}
+			 - 
+			{% if match.away_link.in_menu %}
+			<a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a>
+			{% else %}
+			    {{match.away}}
+			{% endif %}
+			 -
 			{% if match.home_score = 1%}
 			    в : п
 			{% elif match.away_score = 1%}

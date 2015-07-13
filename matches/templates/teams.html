@@ -12,7 +12,7 @@
     <h2>Недавние матчи:</h2>
 	<ul>
 	{% for match in matches %}
-	<li>{{match.match_date}}<br /><a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}</li>
+	<li>{{match.match_date}}<br /><a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a> - <a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}</li>
 	{% endfor %}
 	</ul>
 	{% else %}
@@ -27,7 +27,7 @@
     <h2>Всего матчей: {{total}}</h2>
 	<ul>
 	{% for team in teams %}
-	<li><a href="/teams/{{team}}/">{{team}}</a></li>
+	<li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
 	{% endfor %}
 	</ul>
 {% else %}

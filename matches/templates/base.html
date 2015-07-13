@@ -12,7 +12,7 @@
 	<ul>
 
 	{% for team in teams %}
-	<li><a href="/teams/{{team}}/">{{team}}</a></li>
+	<li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
 	{% endfor %}
 	</ul>
 {% else %}
