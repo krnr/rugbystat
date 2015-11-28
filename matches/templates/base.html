@@ -6,33 +6,36 @@
 	</head>
 	<body>
 	<div id="page">
-		<div id="sidebar">
 			{% block sidebar %}
+		<div id="sidebar">
 {% if teams %}
 	<ul>
 
 	{% for team in teams %}
-	<li><a href="/teams/{{team}}/">{{team}}</a></li>
+	<li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
 	{% endfor %}
 	</ul>
 {% else %}
 
 <p>None to show! in base tpl</p>
 {% endif %}
-			{% endblock%}
 		</div>
-		<div id="content">
+			{% endblock%}
 			{% block content %}
+		<div id="content">
 			This is content
-			{% endblock%}
 		</div>
-		<div id="footer">
+			{% endblock%}
 			{% block footer %}
-			This is footer
-			{% endblock%}
+		<div id="footer">
+			Если у вас есть добавления и исправления к данной базе,
+			не сочтите за труд написать об этом -> <a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">обратная связь</a>
+			<br /><br />
+			ps: спасибо вам за добавления, все комменты вносятся "внутрь" базы в секретные поля,
+			когда допишу функционал, всё будет выводиться как положено. а пока, для добавления матчей в базу
+			вы можете пользоваться <a href="https://docs.google.com/forms/d/1dX9HXAXPu9qItXluQUGQPkA-zbNxtjRgCh327gSIqiI/viewform">вот этой удобной формой</a>!
 		</div>
-
+			{% endblock%}
 	</div>
-
 	</body>
 </html>
