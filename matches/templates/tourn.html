@@ -1,21 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="content">
+<div class="col-md-9" id="content">
 {% if matches.count > 0 %}
+    {% block title %}
     <h2>Все матчи турнира: {{team}}</h2>
-	<table>
-
+    {% endblock %}
+	<div class="table-responsive">
+		<table class="table table-hover">
 	{% for match in matches %}
 	<tr>
 		<td><a href="/tourn/{{match.tournament}}/">{{match.tournament}}</a></td>
-		<td>{% if match.doubtdate %}
-		    {{match.doubtdate}}
-		    {% else %}
-		    {{match.match_date}}
+		<td>{% if match.doubtdate %} {{match.doubtdate}} {% else %} {{match.match_date}}
 		    {% endif %}</td>
-		<td>
-			{% if match.home_link.latin and match.home_link.latin != team.latin %}
+		<td>{% if match.home_link.latin and match.home_link.latin != team.latin %}
 			    <a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a>
 			{% else %}
 			    {{match.home}}
@@ -26,25 +24,36 @@
 			{% else %}
 			    {{match.away}}
 			{% endif %}
-			 - {{match.get_score}}
-			</td>
-			<td>
+			 -
+			 {{match.get_score}}
+		</td>
+		<td>
 		{% if match.home_scorers or match.away_scorers or match.ref or match.stadium %}
-		    <a class="open" href="#openpop{{forloop.counter}}">Очки, судья, стадион</a>
-			<div id="openpop{{forloop.counter}}" class="pop">
-			    <div class="dialog">
-			        <a href="#close" title="Закрыть" class="close">X</a>
-			        {{match.home_scorers}} // {{match.away_scorers}}
-			    </div>
-			    {% if match.ref or match.stadium %}
-			    <div class="dialog">
-			    {% if match.ref %}Судья - {{match.ref}}.{% endif %}
-			    {% if match.stadium %}Стадион {{match.stadium}}{% endif %}
-			    {% if match.comment %}<br>{{match.comment|safe}}{% endif %}
-			    </div>
-		        {% endif %}
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#match{{forloop.counter}}">Очки, судья, стадион</button>
+		<div class="modal fade" id="match{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        {{match.home}} - {{match.away}} - {{match.get_score}}
+		</div>
+		<div class="modal-body">
+		    <div class="dialog">
+		    {{match.home_scorers}} // {{match.away_scorers}}
 		    </div>
-		{% endif %}</td>
+
+		{% if match.ref or match.stadium %}
+			<div class="dialog">
+		{% if match.ref %}Судья - {{match.ref}}.{% endif %}
+		{% if match.stadium %}Стадион {{match.stadium}}{% endif %}
+		{% if match.comment %}<br>{{match.comment|safe}}{% endif %}
+			</div>
+		{% endif %}
+
+		</div>
+		{% endif %}
+
+	</td>
 	</tr>
 	{% endfor %}
 	</table>
