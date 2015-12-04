@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block header %}
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+        <!-- кнопка меню на маленьких экранах -->
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Меню</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- конец-->
+          <a class="navbar-brand" href="/">Собираем ВСЕ матчи любителей по регби</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://docs.google.com/forms/d/1dX9HXAXPu9qItXluQUGQPkA-zbNxtjRgCh327gSIqiI/viewform">Добавить матч</a></li>
+            <li><a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">Обратная связь</a></li>
+            <li><a href="404">Рейтинг</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+{% endblock%}
+
+    {% block sidebar %}
+
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 30px;">
+
+    <div class="col-md-5">
+          <h1 class="page-header">Всего матчей: {{total}}</h1>
+    </div>
+    <div class="col-md-7">
+            <div class="well well-lg">
+              <div class="row">
+                 <span style="font-size:0.8em">
+    13.07.2015: надо же, база пережила второе рождение! теперь тут больше одной таблицы, а значит я могу смело вносить матчи не только "рейтинговые", но и с ДЮСШ-ами, проф.клубами, дублями и прочими, кого не брал раньше в расчет рейтинга. это означает, что мы еще на шаг ближе к тому, чтобы хранить КАЖДЫЙ матч КАЖДОЙ любительской регбийной команды!
+    <br><br>
+    я пока еще не решил, как быть с командами распавшимися. ссылки на их страницы можно найти только со страницы уже действующего клуба. может в будущем заведу отдельно страницу "вы были с нами, и мы вас помним" )) по-прежнему жду ваших советов, предложений и добавлений. всем регби!</span>
+              </div>
+            </div>
+    </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+    {% if matches %}
+    <div class="col-md-3" id="leftCol">
+				<div class="btn-primary btn-xs">
+              	<h3>Недавние матчи:</h3>
+              	</div>
+              	<p></p>
+            <ul class="nav-stacked affix-top" id="sidebar">
+    {% for match in matches %}
+    <li>{{match.match_date}}<br /><a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a> - <a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}</li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    ...
+    {% endif %}
+        </div>
+    {% endblock%}
+
+{% block content %}
+    <div class="col-md-9" id="content">
+    <div class="row">
+
+{% if teams %}
+        <div class="col-md-6">
+    <ul>
+    {% for team in teams %}
+        <li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
+    {% endfor %}
+    </ul>
+        </div>
+{% else %}
+<p>None to show!</p>
+{% endif %}
+    </div>
+    </div>
+</div>
+{% endblock %}

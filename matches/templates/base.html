@@ -1,0 +1,71 @@
+{% load static %}
+<html>
+	<head>
+	    <title>Собираем все матчи по регби любительских команд</title>
+	<link rel="stylesheet" type="text/css" href="{% static "assets/bootstrap.min.css" %}">
+	</head>
+	<body>
+{% block header %}
+	<nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+        <!-- кнопка меню на маленьких экранах -->
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Меню</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- конец-->
+          <a class="navbar-brand" href="#">Собираем ВСЕ матчи любителей по регби</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://docs.google.com/forms/d/1dX9HXAXPu9qItXluQUGQPkA-zbNxtjRgCh327gSIqiI/viewform">Добавить матч</a></li>
+            <li><a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">Обратная связь</a></li>
+            <li><a href="404">Рейтинг</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+{% endblock%}
+
+{% block sidebar %}
+    <div class="container-fluid">
+    {% if teams %}
+        <div class="row">
+    <div class="col-md-3" id="leftCol">
+        <ul class="nav-stacked affix-top" id="sidebar">
+	{% for team in teams %}
+	<li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
+	{% endfor %}
+	    </ul>
+    {% else %}
+    <p>None to show! in base tpl</p>
+    {% endif %}
+	</div>
+{% endblock%}
+
+{% block content %}
+		<div id="content">
+			This is content in base tpl
+		</div>
+{% endblock%}
+
+{% block footer %}
+    <div class="col-md-12" id="footer">
+        если у вас есть добавления и исправления к данной базе,
+        не сочтите за труд написать об этом -&gt; <a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">обратная связь</a>
+        <br><br>
+        ps: спасибо вам за добавления, все комменты вносятся "внутрь" базы в секретные поля,
+        когда допишу функционал, всё будет выводиться как положено. а пока, для добавления
+        матчей в базу вы можете пользоваться <a href="https://docs.google.com/forms/d/1dX9HXAXPu9qItXluQUGQPkA-zbNxtjRgCh327gSIqiI/viewform">вот этой удобной формой</a>!
+        </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static "assets/bootstrap.min.js" %}"></script>
+{% endblock%}
+	</body>
+</html>
