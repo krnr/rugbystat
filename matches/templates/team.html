@@ -1,11 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<div id="content">
 {% if matches.count > 0 %}
     <h2>Все матчи команды: {{team}}</h2>
-	<table>
-
+    <div id="team">
+    {% if team.logo %}
+    <div class="logo">
+    <img src="{{team.logo}}" width="200"/>
+    </div>
+    {% endif %}
+    {% if team.link %}
+    <div class="url">
+    <a href="{{team.link}}">{{team.link}}</a>
+    </div>
+    {% endif %}
+    {% if team.foundation %}
+    <div class="foundation">
+    Год основания: {{team.foundation}}
+    </div>
+    {% endif %}
+    {% if rating %}
+    <div class="rating">
+    Текущий рейтинг: {{rating}}
+    </div>
+    {% endif %}
+    {% if team.story %}
+    <div class="story">
+    {{team.story|safe}}
+    </div>
+    {% endif %}
+    </div>
+    <div style="clear: both"></div>
+		<table>
 	{% for match in matches %}
 	<tr>
 		<td><a href="/tourn/{{match.tournament}}/">{{match.tournament}}</a></td>
@@ -15,14 +42,20 @@
 		    {{match.match_date}}
 		    {% endif %}</td>
 		<td>
-			<a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> -
-			{% if match.home_score = 1%}
-			    в : п
-			{% elif match.away_score = 1%}
-			    п : в
+			{% if match.home_link.latin and match.home_link.latin != team.latin %}
+			    <a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a>
 			{% else %}
-			    {{match.home_score}}:{{match.away_score}}
-			{% endif %}</td>
+			    {{match.home}}
+			{% endif %}
+			 -
+			{% if match.away_link.latin and match.away_link.latin != team.latin %}
+			<a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a>
+			{% else %}
+			    {{match.away}}
+			{% endif %}
+			 -
+			 {{match.get_score}}
+			</td>
 			<td>
 		{% if match.home_scorers or match.away_scorers or match.ref or match.stadium %}
 		    <a class="open" href="#openpop{{forloop.counter}}">Очки, судья, стадион</a>
@@ -48,14 +81,5 @@
 
 <p>Что-то мне подсказывает, что нет такой команды в моей базе данных</p>
 {% endif %}
-
-{% endblock %}
-
-{% block footer %}
-	    Если у вас есть добавления и исправления к данной базе,
-	    не сочтите за труд написать об этом -> <a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">обратная связь</a>
-			<br><br>
-			ps: спасибо вам за добавления, все комменты вносятся "внутрь" базы в секретные поля,
-			когда допишу функционал, всё будет выводиться как положено. а пока, для добавления матчей в базу
-			вы можете пользоваться <a href="https://docs.google.com/forms/d/1dX9HXAXPu9qItXluQUGQPkA-zbNxtjRgCh327gSIqiI/viewform">вот этой удобной формой</a>!
+</div>
 {% endblock %}

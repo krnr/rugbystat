@@ -8,7 +8,7 @@
 		<div id='date'>
 			{{match.match_date}} / {{match.tournament}} </div>
 		<div id='match'>
-			<a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}
+			<a href="/teams/{{match.home_link}}/">{{match.home}}</a> - <a href="/teams/{{match.away_link}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}
 		{% if match.home_scorers %}
 			{{match.home_scorers}} /
 		{% endif %}

@@ -1,38 +1,61 @@
 {% extends "base.html" %}
 
-	{% block sidebar %}
-			Если у вас есть добавления и исправления к данной базе,
-			не сочтите за труд написать об этом -> <a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">обратная связь</a>
-			<br /><br />
-			ps: спасибо вам за добавления, все комменты вносятся "внутрь" базы в секретные поля,
-			когда допишу функционал, всё будет выводиться как положено. а пока, для добавления матчей в базу
-			вы можете пользоваться <a href="https://docs.google.com/forms/d/1dX9HXAXPu9qItXluQUGQPkA-zbNxtjRgCh327gSIqiI/viewform">вот этой удобной формой</a>!
+    {% block sidebar %}
 
-	{% if matches %}
-    <h2>Недавние матчи:</h2>
-	<ul>
-	{% for match in matches %}
-	<li>{{match.match_date}}<br /><a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}</li>
-	{% endfor %}
-	</ul>
-	{% else %}
-	...
-	{% endif %}
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 30px;">
+        
+    <div class="col-md-5">
+          <h1 class="page-header">Всего матчей: {{total}}</h1>
+    </div>
+    <div class="col-md-7">
+            <div class="well well-lg">
+              <div class="row">
+                 <span style="font-size:0.8em">
+    13.07.2015: надо же, база пережила второе рождение! теперь тут больше одной таблицы, а значит я могу смело вносить матчи не только "рейтинговые", но и с ДЮСШ-ами, проф.клубами, дублями и прочими, кого не брал раньше в расчет рейтинга. это означает, что мы еще на шаг ближе к тому, чтобы хранить КАЖДЫЙ матч КАЖДОЙ любительской регбийной команды!
+    <br><br>
+    я пока еще не решил, как быть с командами распавшимися. ссылки на их страницы можно найти только со страницы уже действующего клуба. может в будущем заведу отдельно страницу "вы были с нами, и мы вас помним" )) по-прежнему жду ваших советов, предложений и добавлений. всем регби!</span>
+              </div>
+            </div>
+    </div>
+        </div>
+    </div>
 
-	{% endblock%}
+    {% if matches %}
+    <div class="container-fluid">
+        <div class="row">
+    <div class="col-md-3" id="leftCol">
+				<div class="button"> 
+              	<h3>Недавние матчи:</h3>
+            <ul class="nav-stacked affix-top" id="sidebar">
+    {% for match in matches %}
+    <li>{{match.match_date}}<br /><a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a> - <a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}</li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    ...
+    {% endif %}
+        </div>
+        </div>
+    {% endblock%}
 
 {% block content %}
-
+<div id="content">
+    <div class="col-md-9" id="content">
+    <div class="row">
+    
 {% if teams %}
-    <h2>Всего матчей: {{total}}</h2>
-	<ul>
-	{% for team in teams %}
-	<li><a href="/teams/{{team}}/">{{team}}</a></li>
-	{% endfor %}
-	</ul>
+        <div class="col-md-6">
+    <ul>
+    {% for team in teams %}
+        <li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
+    {% endfor %}
+    </ul>
+        </div>
 {% else %}
-
 <p>None to show!</p>
 {% endif %}
-
+    </div>
+    </div>
+</div>
 {% endblock %}

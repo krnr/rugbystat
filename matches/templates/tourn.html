@@ -1,28 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<div id="content">
 {% if matches.count > 0 %}
     <h2>Все матчи турнира: {{team}}</h2>
 	<table>
 
 	{% for match in matches %}
 	<tr>
-		<td>{{match.tournament}}</td>
-		<td>{% if match.match_date %}
-		    {{match.match_date}}
+		<td><a href="/tourn/{{match.tournament}}/">{{match.tournament}}</a></td>
+		<td>{% if match.doubtdate %}
+		    {{match.doubtdate}}
 		    {% else %}
-		    ???
+		    {{match.match_date}}
 		    {% endif %}</td>
 		<td>
-			<a href="/teams/{{match.home}}/">{{match.home}}</a> - <a href="/teams/{{match.away}}/">{{match.away}}</a> -
-			{% if match.home_score = 1%}
-			    в : п
-			{% elif match.away_score = 1%}
-			    п : в
+			{% if match.home_link.latin and match.home_link.latin != team.latin %}
+			    <a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a>
 			{% else %}
-			    {{match.home_score}}:{{match.away_score}}
-			{% endif %}</td>
+			    {{match.home}}
+			{% endif %}
+			 -
+			{% if match.away_link.latin and match.away_link.latin != team.latin %}
+			<a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a>
+			{% else %}
+			    {{match.away}}
+			{% endif %}
+			 - {{match.get_score}}
+			</td>
 			<td>
 		{% if match.home_scorers or match.away_scorers or match.ref or match.stadium %}
 		    <a class="open" href="#openpop{{forloop.counter}}">Очки, судья, стадион</a>
@@ -35,6 +40,7 @@
 			    <div class="dialog">
 			    {% if match.ref %}Судья - {{match.ref}}.{% endif %}
 			    {% if match.stadium %}Стадион {{match.stadium}}{% endif %}
+			    {% if match.comment %}<br>{{match.comment|safe}}{% endif %}
 			    </div>
 		        {% endif %}
 		    </div>
@@ -47,13 +53,5 @@
 
 <p>Что-то мне подсказывает, что нет такого турнира в моей базе данных</p>
 {% endif %}
-
-{% endblock %}
-
-{% block footer %}
-	    Если у вас есть добавления и исправления к данной базе,
-	    не сочтите за труд написать об этом -> <a href="https://docs.google.com/forms/d/15cvacRfUez7JcSvk5jnAjS7H2t51xlDqLU3I6Jvbmec/viewform?embedded=true">обратная связь</a>
-			<br>
-		ps: спасибо вам за добавления, все комменты вносятся "внутрь" базы в секретные поля,
-		когда допишу функционал, всё будет выводиться как положено.
+</div>
 {% endblock %}
