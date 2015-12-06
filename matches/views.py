@@ -8,7 +8,6 @@ import datetime, operator
 
 # Create your views here.
 
-
 def matches(request):
     return render_to_response('matches.html',
         {'matches': Matches.objects.all(),
@@ -36,10 +35,28 @@ def get_match_list(team_name):
     else:
         return Matches.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name)).order_by('-match_date')
 
+def matches_by_year(match_list):
+    '''
+    match_list is a parameter - querylist result after get_match_list() function.
+    returns a list of lists in a format [[year, _all_matches_from_the_year], [...]]
+    '''
+    # get all dates, result is a list of tuples
+    dates_list = match_list.values_list('match_date')
+    # start an empty list of years to get and empty final dict
+    years, match_by_year = list(), list()
+    # iterate tuples
+    for entry in dates_list:
+        if entry[0].year not in years:
+            years.append(entry[0].year)
+    # now populate final list from the 'years' list: [year, list_of_matches]
+    for year in years:
+        match_by_year.append([year, match_list.filter(match_date__year=year)])
+    return match_by_year
+
 def get_rating(team_name, match_list):
     '''
     team_name is field "latin" in a Team object
-    match_list is a list resulted after get_match_list() function
+    match_list is a querylist result after get_match_list() function
     '''
     if team_name == match_list[0].home_link.latin:
         return match_list[0].home_rating_after
@@ -48,13 +65,13 @@ def get_rating(team_name, match_list):
 
 def team(request, team_name):
     '''
-    team_name is field "latin" in a Team object
-    match_list is a list resulted after get_match_list() function
+    team_name is a field "latin" in a Team object
+    match_list is a querylist result after get_match_list() function
     '''
     match_list = get_match_list(team_name)
     rating = get_rating(team_name, match_list)
     return render_to_response('team.html',
-        {'matches': match_list,
+        {'matches': matches_by_year(match_list),
         'team': Team.objects.filter(latin=team_name)[0],
         'teams': get_all_teams(),
         'rating': rating
@@ -72,7 +89,7 @@ def teams(request):
 def tourn(request, tourn_name):
     tourn_list = Matches.objects.filter(Q(tournament=tourn_name)).order_by('-match_date')
     return render_to_response('tourn.html',
-        {'matches': tourn_list,
+        {'matches': matches_by_year(tourn_list),
         'tourn': tourn_name,
         'teams': get_all_teams(),
         })
