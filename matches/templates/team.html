@@ -59,8 +59,8 @@
 		</td>
 		<td>
 		{% if match.home_scorers or match.away_scorers or match.ref or match.stadium %}
-		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#match{{forloop.counter}}">Очки, судья, стадион</button>
-		<div class="modal fade" id="match{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#match{{match.match_id}}">Очки, судья, стадион</button>
+		<div class="modal fade" id="match{{match.match_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		    <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
