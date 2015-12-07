@@ -31,9 +31,9 @@ def get_match_list(team_name):
         'orel': ['orel', 'belgorod-orel'],
         }
     if team_name in double_names.keys():
-        return Matches.objects.filter(Q(home_link__latin__in=list(double_names[team_name])) | Q(away_link__latin__in=list(double_names[team_name]))).order_by('-match_date')
+        return Matches.objects.filter(Q(home_link__latin__in=list(double_names[team_name])) | Q(away_link__latin__in=list(double_names[team_name])))
     else:
-        return Matches.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name)).order_by('-match_date')
+        return Matches.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name))
 
 def matches_by_year(match_list):
     '''
@@ -78,7 +78,7 @@ def team(request, team_name):
         })
 
 def teams(request):
-    recent_matches = Matches.objects.filter(match_date__lte=datetime.datetime.today(), match_date__gt=datetime.datetime.today()-datetime.timedelta(days=30)).order_by('-match_date')
+    recent_matches = Matches.objects.filter(match_date__lte=datetime.datetime.today(), match_date__gt=datetime.datetime.today()-datetime.timedelta(days=30))
     total = Matches.objects.count()
     return render_to_response('teams.html',
         {'teams': get_all_teams(),
@@ -87,7 +87,7 @@ def teams(request):
         })
 
 def tourn(request, tourn_name):
-    tourn_list = Matches.objects.filter(Q(tournament=tourn_name)).order_by('-match_date')
+    tourn_list = Matches.objects.filter(Q(tournament=tourn_name))
     return render_to_response('tourn.html',
         {'matches': matches_by_year(tourn_list),
         'tourn': tourn_name,

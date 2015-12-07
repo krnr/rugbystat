@@ -43,6 +43,7 @@ class Matches(models.Model):
         #managed = False
         db_table = 'matches'
         verbose_name_plural = 'Matches'
+        ordering = ['-match_date', '-match_id']
 
     def get_score(self):
         if self.home_score == 1:
