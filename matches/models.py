@@ -13,7 +13,7 @@ class Team(models.Model):
     in_menu = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.name, self.city) if self.name != self.city else self.name
+        return "%s (%s)" % (self.name, self.city) if self.name != self.city else u'РК ' + self.name
 
     class Meta:
         ordering = ['name']

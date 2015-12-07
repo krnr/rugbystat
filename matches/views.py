@@ -87,7 +87,7 @@ def _404(request):
     teams, rating = get_all_teams(), {}
     # make a dict with the pairs 'team-rating'
     for t in teams:
-        rating[t.name] = get_rating(t.latin, get_match_list(t.latin))
+        rating[t] = get_rating(t.latin, get_match_list(t.latin))
     rating_sort = sorted(rating.items(), key=operator.itemgetter(1), reverse=True)
     return render_to_response('404.html',
     {'teams': teams,
