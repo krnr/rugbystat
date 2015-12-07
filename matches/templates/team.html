@@ -36,9 +36,8 @@
     <div style="clear: both;"></div>
     <div class="table-responsive">
 		<table class="table table-hover">
-    {% for year_list in matches %}
-        <tr><td colspan="4"><h3>{{year_list.0}}</h3></td></tr>
-    {% for match in year_list.1 %}
+    {% for match in matches %}
+        {% ifchanged %}<tr><td colspan="4"><h3>{{ match.year }}</h3></td></tr>{% endifchanged %}
 	<tr>
 		<td><a href="/tourn/{{match.tournament}}/">{{match.tournament}}</a></td>
 		<td>{% if match.doubtdate %} {{match.doubtdate}} {% else %} {{match.match_date}}
@@ -81,7 +80,6 @@
 		</div>
 		{% endif %}</td>
 	</tr>
-    {% endfor %}
     {% endfor %}
 	</table>
 

@@ -31,27 +31,9 @@ def get_match_list(team_name):
         'orel': ['orel', 'belgorod-orel'],
         }
     if team_name in double_names.keys():
-        return Matches.objects.filter(Q(home_link__latin__in=list(double_names[team_name])) | Q(away_link__latin__in=list(double_names[team_name])))
+        return Matches.objects.filter(Q(home_link__latin__in=list(double_names[team_name])) | Q(away_link__latin__in=list(double_names[team_name]))).extra({'year': 'extract(year from match_date)'})
     else:
-        return Matches.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name))
-
-def matches_by_year(match_list):
-    '''
-    match_list is a parameter - querylist result after get_match_list() function.
-    returns a list of lists in a format [[year, _all_matches_from_the_year], [...]]
-    '''
-    # get all dates, result is a list of tuples
-    dates_list = match_list.values_list('match_date')
-    # start an empty list of years to get and empty final dict
-    years, match_by_year = list(), list()
-    # iterate tuples
-    for entry in dates_list:
-        if entry[0].year not in years:
-            years.append(entry[0].year)
-    # now populate final list from the 'years' list: [year, list_of_matches]
-    for year in years:
-        match_by_year.append([year, match_list.filter(match_date__year=year)])
-    return match_by_year
+        return Matches.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name)).extra({'year': 'extract(year from match_date)'})
 
 def get_rating(team_name, match_list):
     '''
@@ -71,13 +53,16 @@ def team(request, team_name):
     match_list = get_match_list(team_name)
     rating = get_rating(team_name, match_list)
     return render_to_response('team.html',
-        {'matches': matches_by_year(match_list),
+        {'matches': match_list,
         'team': Team.objects.filter(latin=team_name)[0],
         'teams': get_all_teams(),
         'rating': rating
         })
 
 def teams(request):
+    '''
+    returns list of the matches for the recent 30 days
+    '''
     recent_matches = Matches.objects.filter(match_date__lte=datetime.datetime.today(), match_date__gt=datetime.datetime.today()-datetime.timedelta(days=30))
     total = Matches.objects.count()
     return render_to_response('teams.html',
@@ -87,9 +72,13 @@ def teams(request):
         })
 
 def tourn(request, tourn_name):
-    tourn_list = Matches.objects.filter(Q(tournament=tourn_name))
+    '''
+    returns all matches of a tournament given by name in unicode
+    i.e. 'ПФО-Север' for http://..../tourn/ПФО-Север/
+    '''
+    tourn_list = Matches.objects.filter(Q(tournament=tourn_name)).extra({'year': 'extract(year from match_date)'})
     return render_to_response('tourn.html',
-        {'matches': matches_by_year(tourn_list),
+        {'matches': tourn_list,
         'tourn': tourn_name,
         'teams': get_all_teams(),
         })
