@@ -71,17 +71,27 @@
     <div class="col-md-9" id="content">
     <div class="row">
 
-{% if teams %}
+{% if teams_left %}
+    <h2>Команды:</h2>
         <div class="col-md-6">
     <ul>
-    {% for team in teams %}
+    {% for team in teams_left %}
         <li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
     {% endfor %}
     </ul>
         </div>
+        <div class="col-md-6">
+    <ul>
+    {% for team in teams_right %}
+        <li><a href="/teams/{{team.latin}}/">{{team}}</a></li>
+    {% endfor %}
+    </ul>
+        </div>
+
 {% else %}
 <p>None to show!</p>
 {% endif %}
+
     </div>
     </div>
 </div>

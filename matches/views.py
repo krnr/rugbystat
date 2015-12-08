@@ -65,8 +65,10 @@ def teams(request):
     '''
     recent_matches = Matches.objects.filter(match_date__lte=datetime.datetime.today(), match_date__gt=datetime.datetime.today()-datetime.timedelta(days=30))
     total = Matches.objects.count()
+    teams = get_all_teams()
     return render_to_response('teams.html',
-        {'teams': get_all_teams(),
+        {'teams_left': teams[:(len(teams) / 10) * 7],
+        'teams_right': teams[(len(teams) / 10) * 7:],
         'matches': recent_matches,
         'total': str(total)
         })
