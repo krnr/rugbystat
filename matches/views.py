@@ -1,16 +1,21 @@
 # -*- coding: utf-8
 from django.shortcuts import render_to_response
-from matches.models import Matches, Team
-#from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.template import RequestContext
 from django.db.models import Q
+from matches.models import Match, Team
+from matches.forms import MatchForm
 
 import datetime, operator
 
 # Create your views here.
 
 def matches(request):
+    '''
+    test view which renders ALL database
+    '''
     return render_to_response('matches.html',
-        {'matches': Matches.objects.all(),
+        {'matches': Match.objects.all(),
         })
 
 def get_all_teams():
@@ -31,9 +36,9 @@ def get_match_list(team_name):
         'orel': ['orel', 'belgorod-orel'],
         }
     if team_name in double_names.keys():
-        return Matches.objects.filter(Q(home_link__latin__in=list(double_names[team_name])) | Q(away_link__latin__in=list(double_names[team_name]))).extra({'year': 'extract(year from match_date)'})
+        return Match.objects.filter(Q(home_link__latin__in=list(double_names[team_name])) | Q(away_link__latin__in=list(double_names[team_name]))).extra({'year': 'extract(year from match_date)'})
     else:
-        return Matches.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name)).extra({'year': 'extract(year from match_date)'})
+        return Match.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name)).extra({'year': 'extract(year from match_date)'})
 
 def get_rating(team_name, match_list):
     '''
@@ -61,10 +66,10 @@ def team(request, team_name):
 
 def teams(request):
     '''
-    returns list of the matches for the recent 30 days
+    returns mainpage
     '''
-    recent_matches = Matches.objects.filter(match_date__lte=datetime.datetime.today(), match_date__gt=datetime.datetime.today()-datetime.timedelta(days=30))
-    total = Matches.objects.count()
+    recent_matches = Match.objects.filter(match_date__lte=datetime.datetime.today(), match_date__gt=datetime.datetime.today()-datetime.timedelta(days=30))
+    total = Match.objects.count()
     teams = get_all_teams()
     return render_to_response('teams.html',
         {'teams_left': teams[:(len(teams) / 10) * 7],
@@ -78,12 +83,28 @@ def tourn(request, tourn_name):
     returns all matches of a tournament given by name in unicode
     i.e. 'ПФО-Север' for http://..../tourn/ПФО-Север/
     '''
-    tourn_list = Matches.objects.filter(Q(tournament=tourn_name)).extra({'year': 'extract(year from match_date)'})
+    tourn_list = Match.objects.filter(Q(tournament=tourn_name)).extra({'year': 'extract(year from match_date)'})
     return render_to_response('tourn.html',
         {'matches': tourn_list,
         'tourn': tourn_name,
         'teams': get_all_teams(),
         })
+
+def new_match(request):
+    if request.method == 'POST':
+        form = MatchForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.comment += "\nAdded by site form"
+            post.save()
+            print post
+            return HttpResponseRedirect('/')
+    else:
+        form = MatchForm()
+    return render_to_response('form.html',
+        {'teams': get_all_teams(),
+        'form': form
+        }, context_instance=RequestContext(request))
 
 def _404(request):
     teams, rating = get_all_teams(), {}

@@ -1,6 +1,7 @@
 # -*- coding: utf-8
 from __future__ import unicode_literals
 from django.db import models
+from datetime import date
 
 class Team(models.Model):
     name = models.CharField(max_length=30)
@@ -19,30 +20,30 @@ class Team(models.Model):
     class Meta:
         ordering = ['name']
 
-class Matches(models.Model):
-    # the class should be named Match, but...)))
+class Match(models.Model):
     match_id = models.AutoField(primary_key=True)
-    home = models.CharField(max_length=30)
-    home_link = models.ForeignKey(Team, blank=True, null=True, related_name='home_team')
+    home = models.CharField(max_length=30, verbose_name="Хозяева")
+    home_link = models.ForeignKey(Team, blank=True, null=True, related_name='home_team', verbose_name="Ссылка на команду")
     # 'home' - for the name which can be different throughout team's existence
     # 'home_link' - is a key to unique Team class
-    away = models.CharField(max_length=30)
-    away_link = models.ForeignKey(Team, blank=True, null=True, related_name='away_team')
-    home_score = models.IntegerField(blank=True, null=True)
-    away_score = models.IntegerField(blank=True, null=True)
+    away = models.CharField(max_length=30, verbose_name="Гости")
+    away_link = models.ForeignKey(Team, blank=True, null=True, related_name='away_team', verbose_name="Ссылка на команду")
+    home_score = models.IntegerField(blank=True, null=True, verbose_name="Очки хозяев")
+    away_score = models.IntegerField(blank=True, null=True, verbose_name="Очки гостей")
     home_rating_before = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     home_rating_after = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     away_rating_before = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     away_rating_after = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    match_date = models.DateField(blank=True, null=True)
-    # next 5 fields a strings and someday - may be - will become ForeignKeys to classes Player, Stadium, etc...
-    tournament = models.CharField(max_length=50, blank=True)
-    stadium = models.CharField(max_length=100, blank=True, null=True)
-    home_scorers = models.TextField(max_length=1000, blank=True, null=True)
-    away_scorers = models.TextField(max_length=1000, blank=True, null=True)
-    ref = models.CharField(max_length=40, blank=True, null=True)
+    match_date = models.DateField(blank=True, null=True, verbose_name="Дата матча", default=date.today())
+    # next 5 fields are strings and someday - may be - will become ForeignKeys to classes Player, Stadium, etc...
+    tournament = models.CharField(max_length=50, blank=True, verbose_name="Турнир или тест")
+    stadium = models.CharField(max_length=100, blank=True, null=True, verbose_name="Стадион")
+    home_scorers = models.TextField(max_length=1000, blank=True, null=True, verbose_name="Попытки, снайперы")
+    away_scorers = models.TextField(max_length=1000, blank=True, null=True, verbose_name="Попытки, снайперы")
+    ref = models.CharField(max_length=40, blank=True, null=True, verbose_name="Судья")
     # at present 'comment' field isn't rendered anywhere. just for inner usage
-    comment = models.TextField(max_length=1000, blank=True, null=True)
+    comment = models.TextField(max_length=1000, blank=True, null=True, verbose_name="Комментарии")
+    # 'doubtdate is used when 'match_date' is very rough and may be any string: "?? of May", "1923", etc.
     doubtdate = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta:

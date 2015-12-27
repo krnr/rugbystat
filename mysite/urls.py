@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^$', 'matches.views.teams'),
 	url(r'^tourn/(?P<tourn_name>.*)/$', 'matches.views.tourn'),
     url(r'^matches/$', 'matches.views.matches'),
+    url(r'^new_match/$', 'matches.views.new_match'),
     url(r'^.+$', 'matches.views._404'),
 )
