@@ -106,15 +106,20 @@ def new_match(request):
         'form': form
         }, context_instance=RequestContext(request))
 
-def _404(request):
+def rating(request):
     teams, rating = get_all_teams(), {}
     # make a dict with the pairs 'team-rating'
     for t in teams:
         rating[t] = get_rating(t.latin, get_match_list(t.latin))
     rating_sort = sorted(rating.items(), key=operator.itemgetter(1), reverse=True)
-    return render_to_response('404.html',
+    return render_to_response('rating.html',
     {'teams': teams,
     'rating': rating_sort
+    })
+
+def _404(request):
+    return render_to_response('404.html',
+    {'teams': get_all_teams(),
     })
 
 def handler500(request):
