@@ -1,12 +1,12 @@
 # -*- coding: utf-8
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.db.models import Q
 from matches.models import Match, Team
 from matches.forms import MatchForm
 
-import datetime, operator
+import datetime, operator, json
 
 # Create your views here.
 
@@ -40,11 +40,12 @@ def get_match_list(team_name):
     else:
         return Match.objects.filter(Q(home_link__latin=team_name) | Q(away_link__latin = team_name)).extra({'year': 'extract(year from match_date)'})
 
-def get_rating(team_name, match_list):
+def get_rating(team_name):
     '''
     team_name is field "latin" in a Team object
     match_list is a querylist result after get_match_list() function
     '''
+    match_list = get_match_list(team_name)
     if team_name == match_list[0].home_link.latin:
         return match_list[0].home_rating_after
     else:
@@ -53,15 +54,14 @@ def get_rating(team_name, match_list):
 def team(request, team_name):
     '''
     team_name is a field "latin" in a Team object
-    match_list is a querylist result after get_match_list() function
     '''
     match_list = get_match_list(team_name)
-    rating = get_rating(team_name, match_list)
+    team_rating = get_rating(team_name)
     return render_to_response('team.html',
         {'matches': match_list,
         'team': Team.objects.filter(latin=team_name)[0],
         'teams': get_all_teams(),
-        'rating': rating
+        'rating': team_rating
         })
 
 def teams(request):
@@ -91,7 +91,27 @@ def tourn(request, tourn_name):
         })
 
 def new_match(request):
-    if request.method == 'POST':
+    # first let's check AJAX requests
+    if request.is_ajax():
+        response_dict = {
+            'success': True,
+        }
+        # AJAX must send us two int's - 'id_home' and 'id_away'
+        id_home = request.POST.get('id_home')
+        id_away = request.POST.get('id_away')
+        # get Team objects and find theirs name and rating
+        home = Team.objects.filter(id=id_home)[0]
+        away = Team.objects.filter(id=id_away)[0]
+        response_dict = {
+            'home': home.name,
+            'home_rating': str(get_rating(home.latin)),
+            'away': away.name,
+            'away_rating': str(get_rating(away.latin)),
+        }
+        # send back to the page
+        return HttpResponse(json.dumps(response_dict), content_type="application/json"
+)
+    elif request.method == 'POST':
         form = MatchForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
@@ -110,7 +130,7 @@ def rating(request):
     teams, rating = get_all_teams(), {}
     # make a dict with the pairs 'team-rating'
     for t in teams:
-        rating[t] = get_rating(t.latin, get_match_list(t.latin))
+        rating[t] = get_rating(t.latin)
     rating_sort = sorted(rating.items(), key=operator.itemgetter(1), reverse=True)
     return render_to_response('rating.html',
     {'teams': teams,

@@ -20,11 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '@b!+2gf04x$_%&2rvai36zq9!q1v-r9%*e1hsg%9)n2q6h=z3+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['.pythonanywhere.com',]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -37,7 +37,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'matches',
-    'south',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -62,9 +61,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'krnr$rugbystat',
-        'HOST': 'mysql.server',
-        'USER': 'krnr',
-        'PASSWORD': '123',
+        'HOST': 'localhost',
+        'USER': 'root',
+        'PASSWORD': '',
         }
 }
 
@@ -85,8 +84,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_ROOT = '/home/krnr/mysite/static'
+#STATIC_ROOT = 'localhost:8000/static/assets/'
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    ('assets', '/home/krnr/mysite/matches/static'),
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),
     )

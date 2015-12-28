@@ -11,10 +11,85 @@
 </form>
 </div>
 
+
+
 <script type="text/javascript" src="/adddmin/jsi18n/"></script>
 <script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
 <script type="text/javascript" src="/static/admin/js/calendar.js"></script>
 <script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+
+<script type="text/javascript">
+
+var home_score = $('#id_home_score')[0].value;
+var away_score = $('#id_away_score')[0].value;
+$("<div style='margin-top: 200px; float: right;' id='rating'>" + home_score + ":" + away_score + "</div>").insertAfter("h3")
+
+$('form #id_home_score, form #id_away_score').change(function() {
+    home_score = $('#id_home_score')[0].value;
+    away_score = $('#id_away_score')[0].value;
+    console.log("form has changed" + home_score);
+    $('#rating').text(home_score + ":" + away_score);
+});
+
+$('form #id_home_link, form #id_away_link').change(function() {
+    get_rating();
+});
+
+function get_rating() {
+    var id_home_val = 0;
+    var id_away_val = 0;
+    console.log("in get_rating"); // sanity check
+    if ($('#id_home_link').val() !== "" && $('#id_away_link').val() !== "") {
+        id_home_val = $('#id_home_link').val();
+        id_away_val = $('#id_away_link').val();
+    console.log("condition is met"); // sanity check
+    console.log(id_home_val);
+    console.log(id_away_val);
+    $.ajax({
+        type : "POST", // http method
+        data : { 
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            id_home : id_home_val,
+            id_away : id_away_val, }, // data sent with the post request
+        
+        // handle a successful response
+        success : function(response) {
+            $('#id_home').val(response.home);
+            $('#id_away').val(response.away);
+            console.log("Team " + response.home + " has rating " + response.home_rating); // log the returned json to the console
+            console.log("Team " + response.away + " has rating " + response.away_rating); // log the returned json to the console
+            $("<div style='margin-top: 220px; float: right; height: 100px; background-color: #BBBBBB' id='rating_div'>" + 
+                "Team " + response.home + " has rating " + response.home_rating + 
+                "<br>Team " + response.away + " has rating " + response.away_rating + 
+                "</div>").insertAfter("h3");
+            $('<input />', { type: 'checkbox', id: 'cb' }).appendTo($('#rating_div'));
+            $('<label />', { 'for': 'cb', text: "Home bonus" }).appendTo($('#rating_div'));
+
+            $('#cb').click(function() {
+                check_diff(response.home_rating, response.away_rating);
+            });
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });
+    console.log("after Ajax");
+    };
+};
+
+function check_diff(home, away) {
+    var home_rating = parseFloat(home);
+    var away_rating = parseFloat(away);
+    if ($('#cb').is(':checked')) {
+        console.log('in check_diff and checked');
+        home_rating += 3
+    };
+        console.log(home_rating);
+};
+</script>
 
 <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
 <link rel="stylesheet" type="text/css" href="/static/admin/css/global.css"/>
