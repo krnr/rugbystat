@@ -6,7 +6,9 @@
 <h3>Добавьте новый протокол</h3>
 <form method="POST" id="new_match_form">
     {% csrf_token %}
-    {{ form.as_p }}
+    <table>
+    {{ form.as_table }}
+    </table>
     <button type"submit" class="save btn btn-default">Отправить</button>
 </form>
 </div>
@@ -23,36 +25,22 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $('.has-popover').popover({'trigger':'hover'});
-    $('input #cb').change(function() {
-                var home_rating = parseFloat($('span#home_rating').text());
-                console.log("home_rating in #cb event: " + home_rating)
-                var away_rating = parseFloat($('span#away_rating').text());
-                if ($('#cb').is(':checked')) {
-                    home_rating += 3.0;
-                    //console.log("home_rating in #cb checked: " + home_rating)
-                    $('span#home_rating').text(home_rating);
-                } else {
-                    // remove bonus if cb is not checked
-                    home_rating -= 3.0;
-                    //console.log("home_rating in #cb non-checked: " + home_rating)
-                    $('span#home_rating').text(home_rating);
-                };
-            });
-            //check_diff(home_rating, away_rating);
-            //get_score();
+    // doesn't work yet ((((
+    //$('input #cb').change(function() { ...
+
+    //check_diff(home_rating, away_rating);
+    //get_score();
 });
 
 $('form #id_home_link, form #id_away_link').change(function() {
     get_rating(); // where ajax magic happens
 });
 
-
-
 function get_rating() {
     var id_home_val = 0;
     var id_away_val = 0;
     console.log("in get_rating()"); // sanity check
-    // check that both fields are filled
+    // check that both form fields are filled
     if ($('#id_home_link').val() !== "" && $('#id_away_link').val() !== "") {
         id_home_val = $('#id_home_link').val();
         id_away_val = $('#id_away_link').val();
@@ -71,37 +59,47 @@ function get_rating() {
             console.log("Team " + response.home + " has rating " + response.home_rating); // log the returned json to the console
             console.log("Team " + response.away + " has rating " + response.away_rating); // log the returned json to the console
             // is div already visible?
+            var home_rating_response = parseFloat(response.home_rating);
             if ($('#rating_div').length > 0) {
-                var home_rating_response = parseFloat(response.home_rating);
                 if ($('#cb').is(':checked')) {
                     home_rating_response += 3.0;
                 };
-                $('input#id_home_rating_before')[0].val(home_rating_response);
-                $('input#id_away_rating_before')[0].val(response.away_rating);
-                $('input#id_home_rating_before')[0].type = 'visible';
-                $('input#id_away_rating_before')[0].type = 'visible';
-                $('span#home_team').text(response.home);
-                $('span#away_team').text(response.away);
-                $('span#home_rating').text(home_rating_response);
-                $('span#away_rating').text(response.away_rating);
+                $('#id_home_rating_before').val(home_rating_response);
+                $('#id_away_rating_before').val(response.away_rating);
             } else {
                 // if not, let's create a new one
-            $("<div style='margin-top: 220px; float: right; height: 100px; background-color: #BBBBBB' id='rating_div'>" + 
-                "<span id='home_team'>" + response.home + "</span> has rating <span id='home_rating'>" + response.home_rating + 
-                "</span><br><span id='away_team'>" + response.away + "</span> has rating <span id='away_rating'>" + response.away_rating + 
-                "</span><br></div>").insertAfter("h3");
+            $("<div style='margin-top: 140px; float: right; width: 200px; height: 120px; background-color: #BBBBBB' id='rating_div'></div>").insertAfter("h3");
             $('<input />', { type: 'checkbox', id: 'cb' }).appendTo($('#rating_div'));
-            $('<label />', { 'for': 'cb', text: "Home bonus" }).appendTo($('#rating_div'));
+            $('<label />', { 'for': 'cb', text: "Применять бонус домашнего поля?" }).appendTo($('#rating_div'));
             $('<br><span id="rating_diff"></span>').appendTo($('#rating_div'));
             };
+
+            // and fill hidden fields
+            $('#id_home_rating_before').val(home_rating_response);
+            $('#id_away_rating_before').val(response.away_rating);
+
             // only after one ajax call we put an event on checkbox
+            $('#cb').unbind('change').change(function() {
+                var home_rating = parseFloat($('#id_home_rating_before').val());
+                console.log("home_rating in #cb event: " + home_rating)
+                var away_rating = parseFloat($('#id_home_rating_before').val());
+                if ($('#cb').is(':checked')) {
+                    home_rating += 3.0;
+                    console.log("home_rating in #cb checked: " + home_rating)
+                    $('#id_home_rating_before').val(home_rating);
+                } else {
+                    // remove bonus if cb is not checked
+                    home_rating -= 3.0;
+                    //console.log("home_rating in #cb non-checked: " + home_rating)
+                    $('#id_home_rating_before').val(home_rating);
+                };
+            });
         },
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
         }
     });
-    console.log("after Ajax");
     };
 };
 

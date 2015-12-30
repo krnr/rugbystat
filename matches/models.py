@@ -28,8 +28,8 @@ class Match(models.Model):
     # 'home_link' - is a key to unique Team class
     away = models.CharField(max_length=30, verbose_name="Гости")
     away_link = models.ForeignKey(Team, blank=True, null=True, related_name='away_team', verbose_name="Ссылка на команду")
-    home_score = models.IntegerField(blank=True, null=True, verbose_name="Очки хозяев")
-    away_score = models.IntegerField(blank=True, null=True, verbose_name="Очки гостей")
+    home_score = models.IntegerField(blank=True, null=True, verbose_name="Счёт хозяев")
+    away_score = models.IntegerField(blank=True, null=True, verbose_name="Счёт гостей")
     home_rating_before = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Рейтинг хозяев до")
     home_rating_after = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Рейтинг хозяев после")
     away_rating_before = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Рейтинг гостей до")

@@ -6,16 +6,13 @@ from matches.models import Match
 
 class MatchForm(forms.ModelForm):
     """MatchForm is a ModelForm from django"""
+    
     def __init__(self, *args, **kwargs):
         super(MatchForm, self).__init__(*args, **kwargs)
         self.fields['home'].help_text = 'Это название команды будет отображаться в списке матчей'
         self.fields['away'].help_text = 'Это название команды будет отображаться в списке матчей'
         self.fields['home_scorers'].help_text = 'Авторы попыток, реализаций, штрафных. Отображается в карточке матча'
         self.fields['away_scorers'].help_text = 'Авторы попыток, реализаций, штрафных. Отображается в карточке матча'
-        self.fields['home_rating_before'] = forms.DecimalField(widget=forms.HiddenInput(attrs={'readonly':True,}))
-        self.fields['home_rating_after'] = forms.DecimalField(widget=forms.HiddenInput(attrs={'readonly':True,}))
-        self.fields['away_rating_before'] = forms.DecimalField(widget=forms.HiddenInput(attrs={'readonly':True,}))
-        self.fields['away_rating_after'] = forms.DecimalField(widget=forms.HiddenInput(attrs={'readonly':True,}))
 
         for field in self.fields:
             help_text = self.fields[field].help_text
@@ -36,9 +33,13 @@ class MatchForm(forms.ModelForm):
           'home_scorers', 'away_scorers', 'comment', )
         widgets = {
           'match_date': AdminDateWidget(),
-          'home_scorers': forms.Textarea(attrs={'rows':4, 'cols':40,}),
-          'away_scorers': forms.Textarea(attrs={'rows':4, 'cols':40,}),
-          'home': forms.Textarea(attrs={'rows':1, 'cols':40,}),
-          'away': forms.Textarea(attrs={'rows':1, 'cols':40,}),
-          'comment': forms.Textarea(attrs={'rows':4, 'cols':40}),
+          'home_scorers': forms.Textarea(attrs={'rows':4, 'cols':36,}),
+          'away_scorers': forms.Textarea(attrs={'rows':4, 'cols':36,}),
+          'home': forms.Textarea(attrs={'rows':1, 'cols':36,}),
+          'away': forms.Textarea(attrs={'rows':1, 'cols':36,}),
+          'home_rating_before': forms.TextInput(attrs={'readonly':True,}),
+          'home_rating_after': forms.TextInput(attrs={'readonly':True,}),
+          'away_rating_before': forms.TextInput(attrs={'readonly':True,}),
+          'away_rating_after': forms.TextInput(attrs={'readonly':True,}),
+          'comment': forms.Textarea(attrs={'rows':4, 'cols':36}),
         }
