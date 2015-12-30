@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -24,7 +23,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost',]
 
 
 # Application definition
@@ -37,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'matches',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -44,7 +44,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -63,7 +62,7 @@ DATABASES = {
         'NAME': 'krnr$rugbystat',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '1234',
         }
 }
 
@@ -84,7 +83,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-#STATIC_ROOT = 'localhost:8000/static/assets/'
+STATIC_ROOT = ''
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR,'static',),
     )
