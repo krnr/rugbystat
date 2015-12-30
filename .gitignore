@@ -1,7 +1,8 @@
-mysite/settyngs.py
+mysite/settings.py
 rugbystat.sql
 *.pyc
-*/*.pyc
+mysite/*.pyc
+matches/*.pyc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
