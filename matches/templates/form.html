@@ -93,7 +93,15 @@ function get_rating() {
                     //console.log("home_rating in #cb non-checked: " + home_rating)
                     $('#id_home_rating_before').val(home_rating);
                 };
+            // maybe there's already scores presented? checkbox call
+            if ($('#id_home_score').val() != "" && $('#id_away_score').val() != "") {
+                check_diff();
+            };
             });
+            // maybe there's already scores presented? ajax response call
+            if ($('#id_home_score').val() != "" && $('#id_away_score').val() != "") {
+                check_diff();
+            };
         },
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
@@ -103,29 +111,87 @@ function get_rating() {
     };
 };
 
-function check_diff(home_rating, away_rating) {
-   
-    get_score();
+$('#id_home_score, #id_away_score').change(function() {
+    check_diff();
+});
+
+function check_diff() {
+    console.log('in check_diff()') // sanity check
+    // let's get current ratings
+    var home_rating = parseFloat($('#id_home_rating_before').val());
+    var away_rating = parseFloat($('#id_away_rating_before').val());
     // time to get to know a favorite
+    var score = get_score();
+    var rating_diff;
     if (home_rating >= away_rating) {
         console.log('favorite is ' + $('#id_home').val())
+        var fav_score = score.home;
+        var run_score = score.away;
+        rating_diff = home_rating - away_rating;
+        rating_result = rating(fav_score, run_score, rating_diff);
+        put_rating(home_rating + rating_result.fav, away_rating + rating_result.run, rating_result.fav);
     } else {
         console.log('favorite is ' + $('#id_away').val())
-    }
+        var fav_score = score.away;
+        var run_score = score.home;
+        rating_diff = away_rating - home_rating;
+        rating_result = rating(fav_score, run_score, rating_diff);
+        put_rating(home_rating + rating_result.run, away_rating + rating_result.fav, rating_result.fav);
+    };
+};
+function rating(fav_score, run_score, rating_diff){
+    var diff;
+    if (fav_score > run_score) {
+        // favorite won the game
+        if (rating_diff > 10) {
+            // rating was to big to exchange
+            diff = 0;
+        } else {
+            diff = (1 - rating_diff / 10);
+            if (fav_score - run_score > 15) {
+                diff = diff * 1.5;
+            };
+        };
+        console.log('string #164');
+        return {'fav': Math.round(diff * 100) / 100, 'run': Math.round((0-diff) * 100) / 100}
+    } else if (fav_score < run_score) {
+        // favorite lost the game
+        if (rating_diff > 10) {
+            diff = 2;
+        } else {
+            diff = 1 + rating_diff / 10;
+        };
+        if (run_score - fav_score > 15) {
+            diff = diff * 1.5;
+        };
+        return {'fav': Math.round((0-diff) * 100) / 100, 'run': Math.round(diff * 100) / 100}
+    } else {
+        // the game was drawn
+        if (rating_diff > 10) {
+            diff = 1;
+        } else {
+            diff = Math.round((rating_diff / 10) * 100) / 100;
+        };
+        return {'fav': Math.round((0-diff) * 100) / 100, 'run': Math.round(diff * 100) / 100}
+    };
 };
 
 function get_score() {
     // get initial values if the form already has scores
-    var home_score = $('#id_home_score')[0].value;
-    var away_score = $('#id_away_score')[0].value;
-    console.log("formfield init - " + home_score+":"+away_score);
-    // let's check every change in scores
-    $('form #id_home_score, form #id_away_score').change(function() {
-        home_score = $('#id_home_score')[0].value;
-        away_score = $('#id_away_score')[0].value;
-        console.log("formfield has changed - " + home_score+":"+away_score);
-        $('span#rating_diff').text(home_score + ':' + away_score).html();
-    });
+    var home_score = $('#id_home_score').val();
+    var away_score = $('#id_away_score').val();
+    return {home: parseInt(home_score), away: parseInt(away_score)};
+};
+
+function put_rating(home, away, diff) {
+    var home_rating = home;
+    if ($('#cb').is(':checked')) {
+        home_rating -= 3.0;
+    };    
+    $('#id_home_rating_after').val(Math.round(home_rating * 100) / 100);
+    $('#id_away_rating_after').val(Math.round(away * 100) / 100);
+
+    $("#rating_diff").text("Обмен баллами составил " + Math.round(diff * 100) / 100);
 };
 </script>
 

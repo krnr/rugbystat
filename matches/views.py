@@ -90,6 +90,15 @@ def tourn(request, tourn_name):
         'teams': get_all_teams(),
         })
 
+def tourns(request):
+    all_tourns = Match.objects.order_by().values('tournament').distinct()
+    tourn_list = [el['tournament'] for el in all_tourns]
+    tourn_list.sort()
+    return render_to_response('all_tourn.html',
+        {'tourns': tourn_list,
+        'teams': get_all_teams(),
+        })
+
 def new_match(request):
     # first let's check AJAX requests
     if request.is_ajax():

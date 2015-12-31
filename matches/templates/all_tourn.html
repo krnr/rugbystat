@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-md-9" id="content">
+{% if tourns %}
+    {% block title %}
+    <h2>Все турниры в базе</h2>
+    {% endblock %}
+    <div style="clear: both;"></div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+    {% for tourn in tourns %}
+    <tr>
+        <td><a href="/tourn/{{tourn}}/">{{tourn}}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+
+{% else %}
+<p>Что-то мне подсказывает, что произошла ошибка в Django коде.</p>
+{% endif %}
+</div>
+{% endblock %}

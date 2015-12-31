@@ -14,5 +14,6 @@ urlpatterns = patterns('',
     url(r'^matches/$', 'matches.views.matches'),
     url(r'^new_match/$', 'matches.views.new_match'),
     url(r'^rating/$', 'matches.views.rating'),
+    url(r'^all_tourn/$', 'matches.views.tourns'),
     url(r'^.+$', 'matches.views._404'),
 )
