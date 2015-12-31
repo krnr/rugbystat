@@ -3,6 +3,7 @@ rugbystat.sql
 *.pyc
 mysite/*.pyc
 matches/*.pyc
+*/*.pyc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
