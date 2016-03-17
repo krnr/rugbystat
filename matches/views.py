@@ -46,10 +46,21 @@ def get_rating(team_name):
     match_list is a querylist result after get_match_list() function
     '''
     match_list = get_match_list(team_name)
-    if team_name == match_list[0].home_link.latin:
-        return match_list[0].home_rating_after
-    else:
-        return match_list[0].away_rating_after
+    try:
+        # home Team is a 'rating' team and we can check if it is a team_name
+        if team_name == match_list[0].home_link.latin:
+            return match_list[0].home_rating_after
+        else:
+            return match_list[0].away_rating_after
+    except AttributeError as e:
+        print e
+        # home Team is non-rating, so check only away team:
+        if match_list[0].away_link.latin and team_name == match_list[0].away_link.latin:
+            return match_list[0].away_rating_after
+        else:
+            # somehow both team has no 'latin' field. it's an error
+            print "check 'latin' fields of the team %s" % team_name
+            return 0
 
 def team(request, team_name):
     '''
