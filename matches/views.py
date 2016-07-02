@@ -135,7 +135,7 @@ def new_match(request):
         form = MatchForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.comment += "\nAdded by site form"
+            post.comment += "\nAdded by the site form"
             post.save()
             print post
             return HttpResponseRedirect('/')

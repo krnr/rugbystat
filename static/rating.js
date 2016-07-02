@@ -124,6 +124,7 @@ function check_diff() {
         put_rating(home_rating + rating_result.run, away_rating + rating_result.fav, rating_result.fav);
     };
 };
+
 function rating(fav_score, run_score, rating_diff){
     var diff;
     if (fav_score > run_score) {
@@ -171,6 +172,8 @@ function put_rating(home, away, diff) {
     var home_rating = home;
     if ($('#cb').is(':checked')) {
         home_rating -= 3.0;
+        var home_rating_before = parseFloat($('#id_home_rating_before').val());
+        $('#id_home_rating_before').val(home_rating_before - 3.0)
     };
     $('#id_home_rating_after').val(Math.round(home_rating * 100) / 100);
     $('#id_away_rating_after').val(Math.round(away * 100) / 100);
