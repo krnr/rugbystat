@@ -58,7 +58,7 @@
               	<p></p>
             <ul class="nav-stacked affix-top" id="sidebar">
     {% for match in matches %}
-    <li>{{match.match_date}}<br /><a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a> - <a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}</li>
+    <li>{{match.match_date|date:"j E" }}<br /><a href="/teams/{{match.home_link.latin}}/">{{match.home}}</a> - <a href="/teams/{{match.away_link.latin}}/">{{match.away}}</a> - {{match.home_score}}:{{match.away_score}}</li>
     {% endfor %}
     </ul>
     {% else %}
