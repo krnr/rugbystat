@@ -19,7 +19,7 @@ def matches(request):
         })
 
 def get_all_teams():
-    return list(Team.objects.filter(in_menu=True))
+    return Team.objects.filter(in_menu=True)
 
 def get_match_list(team_name):
     '''
@@ -79,7 +79,8 @@ def teams(request):
     '''
     returns mainpage
     '''
-    recent_matches = Match.objects.filter(match_date__lte=datetime.datetime.today(), match_date__gt=datetime.datetime.today()-datetime.timedelta(days=30))
+    recent_matches = Match.objects.filter(match_date__lte=datetime.datetime.today(), 
+                                          match_date__gt=datetime.datetime.today() - datetime.timedelta(days=30))
     total = Match.objects.count()
     teams = get_all_teams()
     return render_to_response('teams.html',
@@ -88,6 +89,19 @@ def teams(request):
         'matches': recent_matches,
         'total': str(total)
         })
+
+def old_teams(request):
+    recent_matches = Match.objects.filter(match_date__lte=datetime.datetime.today(), 
+                                          match_date__gt=datetime.datetime.today() - datetime.timedelta(days=30))
+    total = Match.objects.count()
+    teams = Team.objects.filter(in_menu=False)
+
+    return render_to_response('teams.html', {
+        'teams_left': teams[:(len(teams) / 10) * 7],
+        'teams_right': teams[(len(teams) / 10) * 7:],
+        'matches': recent_matches,
+        'total': str(total)
+    })
 
 def tourn(request, tourn_name):
     '''

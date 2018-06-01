@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^adddmin/', include(admin.site.urls)),
+	url(r'^teams/others/$', 'matches.views.old_teams'),
 	url(r'^teams/(?P<team_name>.*)/$', 'matches.views.team'),
 	url(r'^teams/$', 'matches.views.teams'),
     url(r'^$', 'matches.views.teams'),
